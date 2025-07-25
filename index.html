@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Numsplore</title>
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <style>
+            body { font-family: sans-serif; text-align: center; margin-top: 40px; }
+            .tab-button {
+              margin: 0 10px;
+              padding: 10px 20px;
+              border: none;
+              border-bottom: 2px solid transparent;
+              cursor: pointer;
+              background: none;
+              font-size: 18px;
+            }
+            .tab-button.active {
+                border-color: black; 
+                font-weight: bold; 
+            }
+            .tab-content {margin-top: 30px; }
+            input, button { padding: 10px; font-size: 16px; margin: 5px; }
+        </style> 
+    </head>
+    <body>
+        <h1>Numsplore</h1>
+        <div id = "root"></div> 
+        <script type="text/babel">
+            const PrimeChecker = () => {
+                const [number, setNumber] = React.useState(''); 
+                const [submittedNumber, setSubmittedNumber] = React.useState(''); 
+                const [result, setResult] = React.useState(null); 
+                const checkPrime = async () => {
+                    setSubmittedNumber(number); 
+                    const response = await fetch('http://localhost:5000/check_prime', {
+                        method: 'POST',
+                        headers: { 'Content-Type' : 'application/json' }, 
+                        body: JSON.stringify({number}),
+                    }); 
+                    
+                    const data = await response.json(); 
+                    setResult(data.isPrime ? 'is a prime number!' : 'is not a prime number!');
+
+                }; 
+                return (
+                    <div className="tab-content"> 
+                        <h2>Prime Checker</h2> 
+                        <input 
+                            type="number"
+                            value={number}
+                            onChange={(e) => setNumber(e.target.value)}
+                            placeholder="Enter a number" 
+                        />
+                        <button onClick={checkPrime}>Check</button>
+                        {result && <p>{submittedNumber} {result}</p>}
+
+                    </div>
+                );  
+            };
+
+            const FactorialCalculator = () => {
+                const [number, setNumber] = React.useState(''); 
+                const [result, setResult] = React.useState(null); 
+                const [submittedNumber, setSubmittedNumber] = React.useState(''); 
+
+                const computeFactorial = async () => {
+                    setSubmittedNumber(number); 
+                    const response = await fetch('http://localhost:5000/factorial', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json'}, 
+                        body: JSON.stringify({ number }), 
+                    }); 
+                    const data = await response.json(); 
+                    setResult(data.result); 
+                }; 
+
+                return (
+                    <div className="tab-content">
+                        <h2>Factorial Calculator</h2> 
+                        <input type="number" value={number} onChange={(e) => setNumber(e.target.value)} placeholder="Enter a number" />
+                        <button onClick={computeFactorial}>Calculate</button> 
+                        {result && <p>{submittedNumber}! = {result} </p>}
+                    </div> 
+                ); 
+            }; 
+
+             const FibonacciChecker = () => {
+                const [number, setNumber] = React.useState(''); 
+                const [submittedNumber, setSubmittedNumber] = React.useState(''); 
+                const [result, setResult] = React.useState(null); 
+                const checkFibonacci = async () => {
+                    setSubmittedNumber(number); 
+                    const response = await fetch('http://localhost:5000/fibonacci', {
+                        method: 'POST',
+                        headers: { 'Content-Type' : 'application/json' }, 
+                        body: JSON.stringify({number}),
+                    }); 
+                    
+                    const data = await response.json(); 
+                    setResult(data.isFibonacci ? 'is a member of the fibonacci sequence!' : 'is not a member of the fibonacci sequence!');
+
+                }; 
+                return (
+                    <div className="tab-content"> 
+                        <h2>Fibonacci Checker</h2> 
+                        <input 
+                            type="number"
+                            value={number}
+                            onChange={(e) => setNumber(e.target.value)}
+                            placeholder="Enter a number" 
+                        />
+                        <button onClick={checkFibonacci}>Check</button>
+                        {result && <p>{submittedNumber} {result}</p>}
+
+                    </div>
+                );  
+            };
+
+            const PropertyChecker = () => {
+                const [number, setNumber] = React.useState(''); 
+                const [result, setResult] = React.useState(null); 
+                const [submittedNumber, setSubmittedNumber] = React.useState(''); 
+
+                const checkProperty = async () => {
+                    setSubmittedNumber(number); 
+                    const response = await fetch('http://localhost:5000/properties', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json'}, 
+                        body: JSON.stringify({ number }), 
+                    }); 
+                    const data = await response.json(); 
+                    setResult(data.result); 
+                }; 
+
+                return (
+                    <div className="tab-content">
+                        <h2>Number Properties: Abundant / Deficient / Perfect</h2> 
+                        <input type="number" value={number} onChange={(e) => setNumber(e.target.value)} placeholder="Enter a number" />
+                        <button onClick={checkProperty}>Check</button> 
+                        {result && <p>{submittedNumber} is {result} </p>}
+                    </div> 
+                ); 
+            }; 
+
+
+            const App = () => {
+                const [tab, setTab] = React.useState('prime'); 
+
+                return (
+                    <div>
+                        <div>
+                            <button className={`tab-button ${tab === 'prime' ? 'active' : ''}`} onClick={() => setTab('prime')}>Prime Checker</button>
+                            <button className={`tab-button ${tab === 'factorial' ? 'active' : ''}`} onClick={() => setTab('factorial')}>Factorial</button>
+                            <button className={`tab-button ${tab === 'fibonacci' ? 'active' : ''}`} onClick={() => setTab('fibonacci')}>Fibonacci Checker</button>
+                            <button className={`tab-button ${tab === 'number properties' ? 'active' : ''}`} onClick={() => setTab('number properties')}>Number Properties</button>
+
+
+                        </div>
+                        {tab === 'prime' && <PrimeChecker />}
+                        {tab === 'factorial' && <FactorialCalculator />}
+                        {tab === 'fibonacci' && <FibonacciChecker />}
+                        {tab === 'number properties' && <PropertyChecker />}
+
+                    </div> 
+                );
+            };  
+
+            const root = ReactDOM.createRoot(document.getElementById('root')); 
+            root.render(<App />); 
+        </script>
+    </body>
+</html>
