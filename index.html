@@ -145,6 +145,107 @@
                 ); 
             }; 
 
+            const LCMCalculator = () => {
+                const [number1, setNumber1] = React.useState(''); 
+                const [number2, setNumber2] = React.useState(''); 
+
+                const [result, setResult] = React.useState(null); 
+                const [submittedNumber, setSubmittedNumber] = React.useState({}); 
+
+                const computeLCM = async () => {
+                    if (!number1 || !number2) return; 
+                    setSubmittedNumber({number1, number2}); 
+                    const response = await fetch('http://localhost:5000/lcm', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json'}, 
+                        body: JSON.stringify({ number1, number2 }), 
+                    }); 
+                    const data = await response.json(); 
+                    setResult(data.result); 
+                }; 
+
+                return (
+                    <div className="tab-content">
+                        <h2>LCM Calculator</h2> 
+                        <input type="number1" value={number1} onChange={(e) => setNumber1(e.target.value)} placeholder="Enter first number" />
+                        <input type="number2" value={number2} onChange={(e) => setNumber2(e.target.value)} placeholder="Enter second number" />
+                        <button onClick={computeLCM}>Calculate</button> 
+                        {result && <p>LCM of {submittedNumber.number1} and {submittedNumber.number2} = {result}</p>}                    </div> 
+                ); 
+            }; 
+
+          const PrimeSpiral = () => {
+                const [maxNumber, setMaxNumber] = React.useState(500);
+                const canvasRef = React.useRef(null);
+
+                React.useEffect(() => {
+                    const canvas = canvasRef.current;
+                    const ctx = canvas.getContext('2d');
+                    const size = canvas.width;
+                    const center = size / 2;
+                    const step = 5; // pixels per step
+                    const angleIncrement = 0.1; // spiral density
+
+                    const isPrime = (num) => {
+                        if (num < 2) return false;
+                        if (num === 2) return true;
+                        if (num % 2 === 0) return false;
+                        for (let i = 3; i <= Math.sqrt(num); i += 2) {
+                            if (num % i === 0) return false;
+                        }
+                        return true;
+                    };
+
+                    ctx.clearRect(0, 0, size, size);
+
+                    let n = 1;
+                    let angle = 0;
+
+                    const draw = () => {
+                        while (n <= maxNumber) {
+                            const radius = step * Math.sqrt(n);
+                            angle = angleIncrement * n;
+                            const x = center + radius * Math.cos(angle);
+                            const y = center + radius * Math.sin(angle);
+
+                            ctx.beginPath();
+                            if (isPrime(n)) {
+                                ctx.fillStyle = `hsl(${n % 360}, 100%, 50%)`;
+                                ctx.arc(x, y, 3, 0, 2 * Math.PI); // larger dot for primes
+                            } else {
+                                ctx.fillStyle = 'rgba(150, 150, 150, 0.3)';
+                                ctx.arc(x, y, 1.5, 0, 2 * Math.PI); // faint dot for composites
+                            }
+                            ctx.fill();
+                            n++;
+                        }
+                    };
+
+                    draw();
+                }, [maxNumber]);
+
+                return (
+                    <div style={{ textAlign: 'center' }}>
+                        <h2 className="text-xl font-bold mb-2">Prime Spiral Graph</h2>
+                        <p>Colored dots represent prime numbers</p>
+                        <input
+                            type="number"
+                            value={maxNumber}
+                            onChange={(e) => setMaxNumber(parseInt(e.target.value))}
+                            placeholder="Enter max number"
+                            className="border p-2 rounded mb-4"
+                        />
+                        <br />
+                        <canvas
+                            ref={canvasRef}
+                            width={800}
+                            height={800}
+                            style={{ border: '1px solid #ccc', background: 'white', marginTop: '10px' }}
+                        />
+                    </div>
+                );
+            };
+
 
             const App = () => {
                 const [tab, setTab] = React.useState('prime'); 
@@ -156,6 +257,8 @@
                             <button className={`tab-button ${tab === 'factorial' ? 'active' : ''}`} onClick={() => setTab('factorial')}>Factorial</button>
                             <button className={`tab-button ${tab === 'fibonacci' ? 'active' : ''}`} onClick={() => setTab('fibonacci')}>Fibonacci Checker</button>
                             <button className={`tab-button ${tab === 'number properties' ? 'active' : ''}`} onClick={() => setTab('number properties')}>Number Properties</button>
+                            <button className={`tab-button ${tab === 'lcm' ? 'active' : ''}`} onClick={() => setTab('lcm')}>LCM</button>
+                            <button className={`tab-button ${tab === 'spiral' ? 'active' : ''}`} onClick={() => setTab('spiral')}>Prime Spiral</button>
 
 
                         </div>
@@ -163,6 +266,9 @@
                         {tab === 'factorial' && <FactorialCalculator />}
                         {tab === 'fibonacci' && <FibonacciChecker />}
                         {tab === 'number properties' && <PropertyChecker />}
+                        {tab === 'lcm' && <LCMCalculator />}
+                        {tab === 'spiral' && <PrimeSpiral />}
+
 
                     </div> 
                 );

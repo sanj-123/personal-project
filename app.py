@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from math import gcd 
 
 app = Flask(__name__) 
 CORS(app) 
@@ -74,6 +75,23 @@ def check_property():
     if (sum < number):
         return jsonify({"result": "deficient"})
     return jsonify({"result": "abundant"})
+
+@app.route('/lcm', methods=['POST'])
+def lcm():
+    data = request.get_json() 
+    a = int(data.get("number1"))
+    b = int(data.get("number2")) 
+    if (a < 0 or b < 0):
+        return jsonify({"result": "not defined for negative numbers"})
+    if (a == 0 or b == 0):
+        return jsonify({"result": str(0)})
+    if (a >= b and a % b == 0):
+        return jsonify({"result": str(a)}) 
+    if (b >= a and b % a == 0):
+        return jsonify({"result": str(b)}) 
+    result = abs(a * b) // gcd(a, b)
+    return jsonify({"result": str(result)})
+
 
 
 if __name__ == '__main__':
