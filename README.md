@@ -1,4 +1,4 @@
-# personal-project
+# Numsplore: Numerical Analysis App
 
 Numsplore is a dynamic full-stack number analysis app, made using Javascript, React, HTML, Python and Flask. This application offers various tools enabling users to interactively explore different number properties, such as checking for primes, computing factorials, and plotting prime spiral graphs. Backend API handles logic and validation, while frontend offers real-time interaction, input validation, and dynamic UI. Incorporated CORS, async fetch, component state, and Python math libraries.
 
