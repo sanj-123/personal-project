@@ -5,3 +5,5 @@ Numsplore is a dynamic full-stack number analysis app, made using Javascript, Re
 <img width="1138" height="629" alt="Screenshot 2025-08-04 123444" src="https://github.com/user-attachments/assets/1a7443fa-d63c-4504-b6d5-242540792778" />
 
 <img width="333" height="302" alt="Screenshot 2025-08-04 123536" src="https://github.com/user-attachments/assets/8fd96985-5ec2-43b1-a394-f4cbbe48fcaf" />
+
+Bottom image = sample prime spiral graph of size 500 (500 different numbers plotted)
